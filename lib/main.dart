@@ -22,15 +22,41 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
+
   Widget build(BuildContext context){
     return Scaffold(
-      backgroundColor: Colors.teal,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Conversor"),
-        backgroundColor: Colors.teal[800],
+        backgroundColor: Colors.black,
         centerTitle: true,
       ),
+      body: FutureBuilder<Map>(
+        future: getData(),
+        builder: (context, snapshot){
+          switch (snapshot.connectionState){
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return _buildMessage("Carregando dados..", Colors.black);
+            default:
+              if(snapshot.hasError){
+                 return _buildMessage("erro ao carregar dados..", Colors.orange);
+              }else{
+                return _buildMessage("dados carregados com sucesso..", Colors.black);
+              }
+          }
+        },
+      ),
     );
-  }
-}
+  }//build
+
+  Widget _buildMessage(String text, Color color){
+    return Center(
+      child: Text(text,
+      style: TextStyle(color: color, fontSize: 25.0),
+      textAlign: TextAlign.center,
+      ),
+    );
+  }//_buildMessage
+}//HomeState
 
